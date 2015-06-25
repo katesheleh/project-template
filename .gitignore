@@ -5,7 +5,6 @@ Thumbs.db
 prepros.cfg
 *.sublime*
 *.map
-_assets
 css/*.css
 less/_components-library/*.less
 dist
