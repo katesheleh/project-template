@@ -1,0 +1,11 @@
+/*** Folder with svg img for creating svg sprite ***/
+
+STRUCTURE:
+- origin
+- svgmin
+- template.hbs
+- icon-preview is based in src/icon-preview.html
+
+Add your svg-images to the forder "origin".
+
+After use a command GRUNT SVG

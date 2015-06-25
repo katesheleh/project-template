@@ -1,0 +1,12 @@
+//*** Folder for scripts ***//
+
+
+STRUCTURE:
+
+- lib - external libraries
+
+- modules - own scripts (one script is one file)
+
+- build/scripts.js - an output file with own scripts which is ready for production
+
+- js/scripts.js - the file with dependencies for creating the output file

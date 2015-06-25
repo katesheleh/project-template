@@ -1,0 +1,23 @@
+/*
+Icon classes can be used entirely standalone. They are named after their original file names.
+
+```html
+<!-- `display: block` sprite -->
+<div class="icon-home"></div>
+
+<!-- `display: inline-block` sprite -->
+<img class="icon-home" />
+```
+*/
+.icon-example-2 {
+  background-image: url(../img/spritesheet.png);
+  background-position: 0px 0px;
+  width: 256px;
+  height: 256px;
+}
+.icon-example-3 {
+  background-image: url(../img/spritesheet.png);
+  background-position: -276px 0px;
+  width: 256px;
+  height: 256px;
+}

@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+Thumbs.db
+.DS_Store
+prepros.cfg
+*.sublime*
+*.map
+_assets
+css/*.css
+less/_components-library/*.less
+dist
