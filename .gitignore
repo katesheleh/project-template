@@ -7,4 +7,3 @@ prepros.cfg
 *.map
 css/*.css
 less/_components-library/*.less
-dist
