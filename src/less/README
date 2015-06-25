@@ -1,0 +1,9 @@
+Folder with LESS files
+
+STRUCTURE:
+
+- blocks
+- components
+- global
+- vendor
+- style.less
