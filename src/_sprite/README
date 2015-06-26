@@ -1,7 +1,0 @@
-/**** folder with png-images for creating a sprite ***/
-
-For creating a png-sprite Use a command  GRUNT PNG
-
-The ready sprite will be created in /img/spritesheet.png
-
-CSS properties for this sprite will be created in /_sprite/sprite.css
