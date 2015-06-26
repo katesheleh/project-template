@@ -248,7 +248,7 @@ require('load-grunt-tasks')(grunt);
         '<%= config.src %>/_svg/svgmin'
       ],
       png: [
-        '<%= config.src %>/img/sprite.css'
+        '<%= config.src %>/css/sprite.css'
       ],
       finish: [
         '<%= config.dist %>'
@@ -302,7 +302,7 @@ require('load-grunt-tasks')(grunt);
 
     sprite:{
       all: {
-        src: '<%= config.src %>/_sprite/*.png',
+        src: '<%= config.src %>/_png/*.png',
         dest: '<%= config.src %>/img/spritesheet.png',
         destCss: '<%= config.src %>/css/sprite.css',
         padding: 20
