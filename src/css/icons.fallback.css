@@ -1,0 +1,22 @@
+
+.icon-burger {
+  display: inline-block;
+  vertical-align: middle;
+  background-image: url('../img/png-grunticon/burger.png');
+  background-repeat: no-repeat;
+  width: 32px;
+  height: 12005px;
+}
+
+
+.social--instagram:before,
+.icon-instagram {
+  display: inline-block;
+  vertical-align: middle;
+  background-image: url('../img/png-grunticon/instagram.png');
+  background-repeat: no-repeat;
+  width: 19px;
+  height: 8773px;
+}
+
+

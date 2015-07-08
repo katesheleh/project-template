@@ -11,10 +11,25 @@ require('load-grunt-tasks')(grunt);
     },
 
 
+    /*==============================
+    =            STYLES            =
+    ==============================*/
+
+    csscomb: {
+      options: {
+        config: '.csscomb.json'
+      },
+      style: {
+        expand: true,
+        src: ['!<%= config.src %>/less/components/*.less','<%= config.src %>/less/**/*.less']
+      }
+    },
+
+
     less: {
       style: {
         files: {
-          'src/css/style.css': 'src/less/style.less'
+          '<%= config.src %>/css/style.css': '<%= config.src %>/less/style.less'
         }
       },
        dist: {
@@ -25,124 +40,12 @@ require('load-grunt-tasks')(grunt);
     },
 
 
-
-
-
-    watch: {
-      styles: {
-        files: ['<%= config.src %>/less/**/*.less'],
-        tasks: ['less','notify:less'],
-        options: {
-            spawn: false,
-            livereload: true
-        }
-      },
-
-      livereload: {
-        files: ['<%= config.src %>/*.html'],
-        tasks: ['notify:html'],
-        options: {
-          livereload: true
-        }
-      },
-
-      // scripts: {
-      //   files: ['<%= config.src %>/js/**/*.js'],
-      //   tasks: ['notify:js'],
-      //   options: {
-      //     spawn: false,
-      //     livereload: true
-      //   }
-      // }
-    },
-
-
-
-
-    notify: {
-      less: {
-        options: {
-          title: 'Ура!',  // optional
-          message: 'LESS was compiled', //required
-        }
-      },
-
-      html: {
-        options: {
-          title: 'Ура-Ура!',  // optional
-          message: 'HTML was updated', //required
-        }
-      },
-
-      svg: {
-        options: {
-          title: 'SVG',  // optional
-          message: 'you have the SVG sprite', //required
-        }
-      },
-
-      png: {
-        options: {
-          title: 'PNG',  // optional
-          message: 'PNG sprite was created', //required
-        }
-      }
-    },
-
-
-
-    lintspaces: {
-      test: {
-        src: [
-          '<%= config.src %>/*.html',
-          '!<%= config.src %>/icon-preview.html',
-          '<%= config.src %>/js/scripts.js',
-          '<%= config.src %>/less/*.less',
-          '<%= config.src %>/sass/*.sass'
-        ],
-        options: {
-          editorconfig: '.editorconfig'
-        }
-      },
-    },
-
-
-
-
-    githooks: {
-      test: {
-        'pre-commit': 'lintspaces:test',
-      }
-    },
-
-    copy: {
-      make: {
-        files: [{
-          expand: true,
-          cwd: 'src',
-          src: [
-            'img/**/*',
-            '!css/sprite.css',
-            'css/**',
-            'index.html',
-            'form.html',
-            'blog.html',
-            'post.html',
-            'js/build/*.js',
-            'js/lib/*.js'
-          ],
-          dest: '<%= config.dist %>',
-        }]
-      }
-    },
-
-
     autoprefixer: {
       options: {
         browsers: ['last 2 version', 'ie 9']
       },
       file: {
-        src: '<%= config.dist %>/css/style.css'
+        src: '<%= config.src %>/css/style.css'
       }
     },
 
@@ -169,24 +72,191 @@ require('load-grunt-tasks')(grunt);
     },
 
 
+    /*-----  End of STYLES  ------*/
 
-    htmlmin: {
-      options: {
-        removeComments: true,
-        collapseWhitespace: true,
-        collapseBooleanAttributes: true,
-        caseSensitive: true,
-        keepClosingSlash: false
+
+
+    /*===============================
+    =            SCRIPTS            =
+    ===============================*/
+
+    concat: {
+      app: {
+        src: ['<%= config.src %>/js/plugins/*.js','<%= config.src %>/js/modules/*.js', 'src/js/main.js'],
+        dest: '<%= config.src %>/js/build/scripts.js'
+      }
+    },
+
+    uglify: {
+      app: {
+        src: '<%= config.dist %>/js/build/scripts.js',
+        dest: '<%= config.dist %>/js/build/scripts.min.js'
+      }
+    },
+    /*-----  End of SCRIPTS  ------*/
+
+
+
+
+
+
+  /*=============================
+  =            WATCH            =
+  =============================*/
+
+  watch: {
+
+      scripts: {
+        files: ['<%= config.src %>/js/**/*.js', '!<%= config.src %>/js/build/*.js'],
+        tasks: ['scripts']
       },
-      html: {
-        files: {
-          '<%= config.dist %>/index.min.html': '<%= config.dist %>/index.html',     //'destination': 'source'
-          '<%= config.dist %>/form.min.html': '<%= config.dist %>/form.html',
-          '<%= config.dist %>/blog.min.html': '<%= config.dist %>/blog.html',
-          '<%= config.dist %>/post.min.html': '<%= config.dist %>/post.html'
+
+
+      styles: {
+        files: ['<%= config.src %>/less/**/*.less'],
+        tasks: ['styles']
+      }
+    },
+
+    browserSync: {
+      dev: {
+        bsFiles: {
+          src : [
+            '<%= config.src %>/css/*.css',
+            '<%= config.src %>/*.html',
+            '<%= config.src %>/js/build/*.js'
+          ]
+        },
+        options: {
+          watchTask: true,
+          server: '<%= config.src %>'
         }
       }
     },
+
+
+  /*-----  End of WATCH  ------*/
+
+
+
+  /*============================
+  =            HTML            =
+  ============================*/
+
+  embed: {
+    options: {
+      threshold: '100KB'
+    },
+    some_target: {
+      files: {
+        '<%= config.dist %>/index.embed.html': '<%= config.dist %>/index.html'
+      }
+    }
+  },
+
+  replace: {
+    dist: {
+      src: '<%= config.dist %>/*.html',
+      expand: true,
+      overwrite: true,
+      replacements: [
+      {
+
+        from: /href=\"css\/style.css\"/g,
+        to: 'href="css/style.min.css"'
+      },{
+        from: /<script src=\"js\/build\/plugins.js/g,
+        to: '<script src="js/build/plugins.min.js'
+      },{
+        from: /<script src=\"js\/build\/scripts.js/g,
+        to: '<script src="js/build/scripts.min.js'
+      }
+      ]
+    }
+  },
+
+  /*-----  End of HTML  ------*/
+
+
+
+
+
+
+
+
+
+
+    notify: {
+      less: {
+        options: {
+          title: 'Ура!',  // optional
+          message: 'LESS was compiled', //required
+        }
+      },
+
+      html: {
+        options: {
+          title: 'Ура-Ура!',  // optional
+          message: 'HTML was updated', //required
+        }
+      },
+
+      svg: {
+        options: {
+          title: 'SVG',  // optional
+          message: 'you have the SVG sprite', //required
+        }
+      }
+    },
+
+
+
+    lintspaces: {
+      test: {
+        src: [
+          '!<%= config.src %>/icon-preview.html',
+          '<%= config.src %>/*.html',
+          '<%= config.src %>/js/scripts.js',
+          '!<%= config.src %>/js/plugins/*.js',
+          '!<%= config.src %>/js/lib/*.js',
+          '<%= config.src %>/less/*.less'
+        ],
+        options: {
+          editorconfig: '.editorconfig'
+        }
+      },
+    },
+
+
+
+
+    githooks: {
+      test: {
+        'pre-commit': 'lintspaces:test',
+      }
+    },
+
+    copy: {
+      make: {
+        files: [{
+          expand: true,
+          cwd: '<%= config.src %>',
+          src: [
+            'index.html',
+            'img/**/*',
+            'css/**',
+            'js/build/*.js',
+            'js/lib/*.js',
+            'fonts/*.{eof,otf,svg,ttf,woff}'
+          ],
+          dest: '<%= config.dist %>',
+        }]
+      }
+    },
+
+
+
+
 
 
 
@@ -218,26 +288,6 @@ require('load-grunt-tasks')(grunt);
 
 
 
-    csscomb: {
-      options: {
-        config: '.csscomb.json'
-      },
-      style: {
-        expand: true,
-        src: ["<%= config.src %>/less/**/*.less"]
-      }
-    },
-
-
-
-    concat: {
-      app: {
-        src: ['<%= config.src %>/js/modules/*.js', 'src/js/scripts.js'],
-        dest: '<%= config.src %>/js/build/scripts.js'
-      }
-    },
-
-
 
     clean: {
       svg: [
@@ -246,9 +296,6 @@ require('load-grunt-tasks')(grunt);
         '<%= config.src %>/css/icons.fallback.css',
         '<%= config.src %>/img/png-grunticon',
         '<%= config.src %>/_svg/svgmin'
-      ],
-      png: [
-        '<%= config.src %>/css/sprite.css'
       ],
       finish: [
         '<%= config.dist %>'
@@ -277,7 +324,7 @@ require('load-grunt-tasks')(grunt);
     },
 
     grunticon: {
-    mysvg: {
+      mysvg: {
         files: [{
             expand: true,
             cwd: '<%= config.src %>/_svg',
@@ -295,34 +342,28 @@ require('load-grunt-tasks')(grunt);
           pngpath      : '../img/png-grunticon',
           template     : '<%= config.src %>/_svg/template.hbs',
           defaultWidth : '200px',
-          defaultHeight: '200px'
+          defaultHeight: '200px',
+          customselectors: {
+                "instagram": [".social--instagram:before"]
+          },
         }
-      }
-    },
-
-    sprite:{
-      all: {
-        src: '<%= config.src %>/_png/*.png',
-        dest: '<%= config.src %>/img/spritesheet.png',
-        destCss: '<%= config.src %>/css/sprite.css',
-        padding: 20
       }
     }
   });
 
 
 
-  grunt.registerTask('fit', [
-   'clean:finish',
-   'copy:make',
-   'less:dist',
-   'autoprefixer',
-   'cmq',
-   'cssmin',
-   'imagemin',
-   'prettify',
-   'htmlmin'
+  grunt.registerTask('styles',[
+    'less:style',
+    'autoprefixer',
+    'notify:less'
   ]);
+
+
+  grunt.registerTask('scripts',[
+    'concat'
+  ]);
+
 
   grunt.registerTask('svg', [
     'clean:svg',
@@ -331,11 +372,36 @@ require('load-grunt-tasks')(grunt);
     'notify:svg'
   ]);
 
-   grunt.registerTask('png', [
-    'clean:png',
-    'sprite',
-    'notify:png'
+
+  grunt.registerTask('fit', [
+   'clean:finish',
+   'copy:make',
+   'cmq',
+   'cssmin',
+   'imagemin',
+   'uglify',
+   'replace',
+   'prettify'
   ]);
+
+
+  grunt.registerTask('make', [
+    'svg',
+    'styles',
+    'scripts',
+    'fit',
+    'embed'
+  ]);
+
+
+  grunt.registerTask('default', [
+    'styles',
+    'scripts',
+    'browserSync',
+    'watch'
+  ]);
+
+
 
   grunt.registerTask('test', ['lintspaces:test']);
 };
