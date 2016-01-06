@@ -1,0 +1,41 @@
+@column-name: col; // Префикс класса сетки
+@column-count: 12;  // Количество классов (колонок в сетке)
+@extend: 15px; // внутренний боковой отступ в колонках, разделенный на 2 (padding)
+
+
+
+
+// формируем стили для .row (обертка для .col)
+.row {
+    margin-bottom: 0;
+    margin-top: 0;
+    margin-right: @extend / -1;
+    margin-left:  @extend / -1;
+
+    &:after {
+      content:"";
+      clear: both;
+      display: table;
+    }
+}
+
+
+
+.col {
+    min-height: 1px;
+    float: left;
+    padding-bottom: 0;
+    padding-top: 0;
+    padding-right: @extend;
+    padding-left: @extend;
+}
+
+.generate-column(@i: 1) when (@i =< @column-count) {
+  .@{column-name}-@{i} {
+    width: @i * (100% / @column-count);
+  }
+
+  .generate-column(@i + 1);
+}
+
+.generate-column(); //вызываем функцию, которая формирует нужные классы
