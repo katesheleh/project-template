@@ -1,4 +1,6 @@
-# project-template
+# ! репозиторий не поддерживается !
+
+Project-template
 
 Project template is based on GRUNT and NPM.
 Preprocessor - LESS.
